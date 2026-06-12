@@ -2,9 +2,9 @@
 
 - Getting started
   - [What is FockNote](/)
-  - [Quick setup](README.md#quick-setup)
-  - [Privacy modes](README.md#two-privacy-modes)
-  - [Naming your repos](README.md#naming-your-repos)
+  - [Quick setup](/?id=quick-setup)
+  - [Privacy modes](/?id=two-privacy-modes)
+  - [Naming your repos](/?id=naming-your-repos)
 
 - The skill
   - [Installing the skill](skill/references/installing-the-skill.md)
