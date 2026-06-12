@@ -11,6 +11,6 @@ are Markdown files in **your** repo. No server, no subscription, no lock-in.
 - 🔒 Private by default — your notes, your private repo
 - 💸 $0 forever on GitHub Pages + GitHub
 
-[Get started](#focknote)
+[Get started](#/?id=quick-setup)
 [Use this template](https://github.com/focknote/focknote/generate)
 [GitHub](https://github.com/focknote/focknote)
