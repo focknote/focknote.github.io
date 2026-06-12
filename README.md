@@ -14,8 +14,9 @@ template repo: **[focknote/focknote](https://github.com/focknote/focknote)**.
 
 The fastest path is the **FockNote skill** for Claude:
 
-1. **[Install the skill](skill/references/installing-the-skill.md)** — one copy into your
-   Claude Code `skills/` folder (or point chat at it).
+1. **[Install the skill](skill/references/installing-the-skill.md)** — in Claude Code:
+   `/plugin marketplace add focknote/focknote.github.io` then
+   `/plugin install focknote@focknote` (or point chat at it).
 2. Ask Claude *"stand up my FockNote notebook"* — the [skill](skill/SKILL.md) creates the
    repo(s), wires the config, enables Pages, and hands you a live URL.
 
