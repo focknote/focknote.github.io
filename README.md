@@ -58,8 +58,14 @@ Use a **fine-grained** GitHub token scoped to just your notes repo (*Contents: r
   its 1.0). MVP commits to `main`; team review = fork → PR via the GitHub UI.
 - **One-click "Login with GitHub"** (Cloudflare Worker + OAuth) is an optional upgrade, not
   required — see [the OAuth guide](skill/references/oauth-worker-setup.md).
+- **Offline is partial.** The app shell + editor load with no network, but you can't
+  *edit or browse notes offline*: GitHub is the backend, and Sveltia re-checks auth against
+  GitHub on startup, so offline it shows a login screen. This is a Sveltia design boundary —
+  a local-only backend was [declined upstream](https://github.com/sveltia/sveltia-cms/issues/630)
+  ("local data is stored in IndexedDB, partitioned by repository"). True offline *reading*
+  would come via the static reading-view fast-follow below.
 - A polished **reading view** with rendered Markdown + `[[backlinks]]` is a planned
-  fast-follow; today the installable app is the editor.
+  fast-follow; today the installable app is the editor. It would also enable offline reading.
 
 ## Contributing
 
