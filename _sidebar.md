@@ -7,6 +7,7 @@
   - [Naming your repos](README.md#naming-your-repos)
 
 - The skill
+  - [Installing the skill](skill/references/installing-the-skill.md)
   - [SKILL.md](skill/SKILL.md)
   - [Sveltia config reference](skill/references/sveltia-config-reference.md)
   - [Token scopes](skill/references/token-scopes.md)
