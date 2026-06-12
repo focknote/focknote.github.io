@@ -1,0 +1,11 @@
+{
+  "name": "focknote",
+  "version": "0.1.0",
+  "description": "Stand up a free, installable, git-backed personal notebook (Sveltia CMS + PWA on GitHub Pages) from one request, or update an existing one.",
+  "author": {
+    "name": "FockNote",
+    "url": "https://github.com/focknote"
+  },
+  "homepage": "https://focknote.github.io",
+  "keywords": ["notebook", "notion-alternative", "sveltia-cms", "pwa", "github-pages", "markdown"]
+}

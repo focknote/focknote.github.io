@@ -1,0 +1,14 @@
+{
+  "name": "focknote",
+  "owner": {
+    "name": "FockNote",
+    "url": "https://github.com/focknote"
+  },
+  "plugins": [
+    {
+      "name": "focknote",
+      "source": "./skill",
+      "description": "Scaffold + deploy a free, installable, git-backed FockNote notebook (Sveltia CMS + PWA on GitHub Pages), or update an existing one."
+    }
+  ]
+}

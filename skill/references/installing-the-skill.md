@@ -1,12 +1,29 @@
 # Installing the skill
 
-The FockNote skill is just `SKILL.md` + the `references/` folder. "Installing" it means
-putting those files where a Claude can discover them, so you can say *"set up my FockNote
-notebook"* and it runs. Pick the path that matches where you'll use it.
+The FockNote skill is `SKILL.md` + its `references/`, packaged as a **Claude Code plugin**.
+"Installing" means making a Claude discover it so you can say *"stand up my FockNote
+notebook"* and it runs. Pick the path for where you'll use it.
 
-## Claude Code (local) — recommended
+## Claude Code — plugin marketplace (recommended)
 
-Claude Code discovers skills in a `skills/` folder. Drop FockNote's in:
+This repo is a Claude Code plugin marketplace (it ships `.claude-plugin/marketplace.json`).
+Add it once, then install the `focknote` plugin:
+
+```text
+/plugin marketplace add focknote/focknote.github.io
+/plugin install focknote@focknote
+/reload-plugins
+```
+
+Then invoke **`/focknote`** (or just ask *"stand up my FockNote notebook"*). Update later
+with `/plugin marketplace update focknote`; remove with `/plugin uninstall focknote@focknote`.
+
+> Browsing instead of one-liners? Run `/plugin`, open **Marketplaces** → add
+> `focknote/focknote.github.io`, then **Discover** → install **focknote**.
+
+## Claude Code — manual skills folder (no marketplace)
+
+Prefer not to use the plugin system? Drop the skill straight into your skills directory:
 
 ```sh
 git clone https://github.com/focknote/focknote.github.io fn
@@ -20,8 +37,7 @@ New-Item -ItemType Directory -Force "$HOME\.claude\skills\focknote" | Out-Null
 Copy-Item fn\skill\SKILL.md, fn\skill\references "$HOME\.claude\skills\focknote\" -Recurse
 ```
 
-Then in Claude Code, invoke **`/focknote`** or just ask *"stand up my FockNote notebook"*.
-The `name:` / `description:` in `SKILL.md`'s frontmatter is what makes it discoverable.
+Invoke **`/focknote`** or ask for it. The frontmatter `name:` in `SKILL.md` sets the name.
 
 > Project-scoped instead of personal? Put it at `<your-repo>/.claude/skills/focknote/` and
 > commit it — anyone working in that repo gets the skill.
