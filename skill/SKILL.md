@@ -83,13 +83,16 @@ git rm -r content CLAUDE.md && git commit -m "Private mode: notes live in the pr
 > privacy leak. In private mode the public shell must contain **no notes**. (Public mode
 > keeps `content/` — there the shell *is* the notes repo.)
 
-**Memory bridge.** The template ships a root `CLAUDE.md` + a `content/agent/INDEX.md`.
-Together they make the notebook double as Claude's project memory: when Claude Code
-opens the notes repo, the harness loads `CLAUDE.md`, which points it at
-`content/agent/` (model-maintained notes, `INDEX.md` first) as the authoritative
-store. That's why the seed copies `CLAUDE.md` into the **notes** repo (not the
-public shell). Any repo wanting Claude-managed memory just needs these two files —
-no backend/Worker/MCP. (Concept: `INTERFACE.md`.)
+**Memory bridge.** The template ships three files that make the notebook double as
+Claude's project memory: root `CLAUDE.md` (a thin marker-delimited block that
+**imports** `@content/agent/MEMORY.md`), `content/agent/MEMORY.md` (the read/write
+conventions — single source of truth), and `content/agent/INDEX.md` (the index
+note). When Claude Code opens the notes repo, the harness loads `CLAUDE.md` → the
+import pulls in the conventions → Claude treats `content/agent/` (`INDEX.md` first)
+as the authoritative store. The seed copies all three into the **notes** repo (not
+the public shell). The root file is a thin *import* on purpose: it makes adding the
+bridge to an **existing** repo a non-destructive append — see "Add the memory bridge
+to an existing repo" below. (Concept: `INTERFACE.md`.)
 
 ### A2. Write the config
 
@@ -135,10 +138,12 @@ template → Create a new repository**. Name it `focknote`. Pick **Public**. Cre
 **https://github.com/new** named `focknote-notes`, **Add a README** (so it has a `main`
 branch)."
 
-**B1c. (Memory bridge — optional)** "To let Claude use this notebook as its memory:
-in the **notes** repo, add a file named `CLAUDE.md` (paste the template's version from
-**https://github.com/OWNER/focknote/blob/main/CLAUDE.md**) and a folder note
-`content/agent/INDEX.md`. Claude Code then treats `content/agent/` as its store."
+**B1c. (Memory bridge — optional)** "To let Claude use this notebook as its memory,
+add three files to the **notes** repo (copy each from
+**https://github.com/OWNER/focknote**): `CLAUDE.md` (root), `content/agent/MEMORY.md`,
+and `content/agent/INDEX.md`. Claude Code then treats `content/agent/` as its store.
+Adding to a repo that *already* has a `CLAUDE.md`? Don't replace it — paste only the
+`<!-- focknote:memory:start … end -->` block to the **end** of your existing file."
 
 **B2. Set the config.** "In your new `focknote` repo, open `admin/config.yml`, click edit,
 and set the `repo:` line to **`<you>/focknote-notes`** (private mode) or **`<you>/focknote`**
@@ -186,6 +191,41 @@ If a step fails → [`references/troubleshooting.md`](references/troubleshooting
 > read/write). Tighter option: a **fine-grained** token scoped to just your notes repo
 > (*Contents: read/write*, *Metadata: read*). Use a **short expiry**. Details:
 > `skill/references/token-scopes.md`.
+
+## Add the memory bridge to an existing repo
+
+Use when the user wants Claude-managed memory **in a repo they already have** (a
+coding project, a docs repo) without standing up a whole notebook — e.g. "store the
+best of my Claude sessions here to share with friends." This drops in a
+`content/agent/` folder + wires `CLAUDE.md` **non-destructively**.
+
+> **Conflict warning — never overwrite `CLAUDE.md`.** An existing repo usually
+> already has a `CLAUDE.md` of coding instructions. Do **not** clobber it. The
+> bridge is a marker-delimited block (`<!-- focknote:memory:start … end -->`) that
+> only **imports** `@content/agent/MEMORY.md`, so it appends cleanly and is
+> idempotent. Coding instructions stay intact; memory layers on top.
+
+```sh
+SRC=path/to/focknote      # a clone of the focknote template (has content/agent/ + CLAUDE.md)
+DEST=path/to/your/repo    # the existing repo to add memory to
+
+mkdir -p "$DEST/content/agent"
+cp "$SRC/content/agent/MEMORY.md" "$SRC/content/agent/INDEX.md" "$DEST/content/agent/"
+
+# Wire CLAUDE.md: append the marker block, never overwrite. Idempotent.
+if [ -f "$DEST/CLAUDE.md" ] && grep -q "focknote:memory:start" "$DEST/CLAUDE.md"; then
+  echo "memory bridge already present — nothing to do"
+else
+  [ -s "$DEST/CLAUDE.md" ] && printf '\n' >> "$DEST/CLAUDE.md"  # separate from existing content
+  cat "$SRC/CLAUDE.md" >> "$DEST/CLAUDE.md"                     # the focknote:memory block (creates file if absent)
+fi
+# then: cd "$DEST" && git add content/agent CLAUDE.md && git commit && git push
+```
+
+To **remove** later: delete the lines between the two `focknote:memory` markers and
+the `content/agent/` folder. (Tier B: have the user paste the marker block from
+`OWNER/focknote/blob/main/CLAUDE.md` to the end of their existing `CLAUDE.md`, and add
+the two `content/agent/` files by hand.)
 
 ## Updating an existing FockNote
 
