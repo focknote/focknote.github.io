@@ -1,9 +1,16 @@
 # What is FockNote
 
 **FockNote** is a free, installable, git-backed personal notebook — "fork your own Notion."
-Every note is a Markdown file committed to **your** GitHub repo. The editor
-([Sveltia CMS](https://sveltiacms.app/)) runs entirely in your browser; GitHub Pages hosts
-the app shell; git is the whole backend. No server, no subscription, no lock-in.
+Every note is a Markdown file in **your** GitHub repo, which makes it both your notebook
+**and** a shared workspace + memory that you and **Claude** read and write. Capture from any
+surface — Claude Code, Claude chat (GitHub connector), the clean in-app reading view, or the
+in-browser [Sveltia CMS](https://sveltiacms.app/) form. GitHub Pages hosts the app shell; git
+is the whole backend. No server, no subscription, no lock-in.
+
+> 🧠 **Notes as a shared brain.** Drop in the memory bridge (`content/agent/` + `CLAUDE.md`)
+> and Claude treats your notebook as project memory — curating the best of your sessions back
+> as commits you can see, edit, and share. See
+> [INTERFACE.md](https://github.com/focknote/focknote/blob/main/INTERFACE.md).
 
 > 🍴 The name is "ForkNote" in a thick accent. The fork is the git kind. The cheek is the point.
 
@@ -26,8 +33,8 @@ Prefer to do it by hand? Manual path:
    notebook repo (name it anything).
 2. Set `backend.repo` in `admin/config.yml` to the repo that holds your notes.
 3. **Settings → Pages →** deploy from branch `main`, `/ (root)`.
-4. Open `https://<you>.github.io/<repo>/`, **Install app**, open the editor, **Sign in with
-   Token**, and write.
+4. Open `https://<you>.github.io/<repo>/`, **Install app**, **Sign in with Token**, and write
+   — read in the `/read/` view, edit in the form, or let Claude read and write the repo.
 
 Saving a note = a git commit. That's it.
 
@@ -71,8 +78,9 @@ Use a **fine-grained** GitHub token scoped to just your notes repo (*Contents: r
   a local-only backend was [declined upstream](https://github.com/sveltia/sveltia-cms/issues/630)
   ("local data is stored in IndexedDB, partitioned by repository"). True offline *reading*
   would come via the static reading-view fast-follow below.
-- A polished **reading view** with rendered Markdown + `[[backlinks]]` is a planned
-  fast-follow; today the installable app is the editor. It would also enable offline reading.
+- A clean **reading view** (`/read/`, rendered Markdown) ships today; `[[backlinks]]` +
+  search are the next fast-follow. (Reading still needs a token round-trip in private mode,
+  so it isn't fully offline yet.)
 
 ## Contributing
 

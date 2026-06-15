@@ -1,17 +1,21 @@
 ---
 name: focknote
 description: >-
-  Stand up a FockNote — a free, installable, git-backed personal notebook (Sveltia CMS
-  + PWA on GitHub Pages). Use when the user wants to create/deploy/scaffold their own
-  notebook, "fork your own Notion", a private notes app on GitHub, or to update/re-vendor
-  an existing FockNote. Goes from nothing to a deployed, editable notebook + hand-off URL.
+  Stand up a FockNote — a free, installable, git-backed Markdown notebook on GitHub Pages
+  that doubles as shared workspace + memory for you and Claude (PWA shell + in-browser
+  Sveltia editor). Use when the user wants to create/deploy/scaffold their own notebook,
+  "fork your own Notion", a private notes app on GitHub, a Claude-readable notes/memory repo,
+  or to update/re-vendor an existing FockNote. Goes from nothing to a deployed notebook +
+  hand-off URL.
 ---
 
 # FockNote setup skill
 
 Goal: **one request → a deployed, installable, editable notebook**, then a hand-off the
-user can act on. Notes are Markdown committed to the user's git repo; Sveltia CMS is the
-editor; GitHub Pages hosts the app shell.
+user can act on. Notes are Markdown committed to the user's git repo — read/written by
+Claude (Code or chat), the in-app reading view, or the in-browser Sveltia form. GitHub
+Pages hosts the app shell. Optionally wire the **memory bridge** so the notebook doubles
+as Claude's project memory (see "Add the memory bridge to an existing repo").
 
 ## 0. Pick the execution tier (decide first)
 
