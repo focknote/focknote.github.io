@@ -70,18 +70,26 @@ Then **move the notes out of the public shell into the private repo** — this i
 private mode actually private:
 ```sh
 cd focknote
-# seed the PRIVATE notes repo with the content folder...
+# seed the PRIVATE notes repo with the content folder + the memory bridge...
 git clone https://github.com/<you>/focknote-notes ../focknote-notes
-cp -r content ../focknote-notes/ && (cd ../focknote-notes && git add -A \
-  && git commit -m "Seed notes" && git push -u origin main)
-# ...then DELETE content/ from the PUBLIC shell so notes are never served by Pages
-git rm -r content && git commit -m "Private mode: notes live in the private repo"
+cp -r content CLAUDE.md ../focknote-notes/ && (cd ../focknote-notes && git add -A \
+  && git commit -m "Seed notes + memory bridge" && git push -u origin main)
+# ...then DELETE notes + bridge from the PUBLIC shell so they're never served by Pages
+git rm -r content CLAUDE.md && git commit -m "Private mode: notes live in the private repo"
 ```
 > **Why the delete matters:** Sveltia reads notes from `backend.repo` via the GitHub API,
 > not from the shell's `content/` folder. If `content/` stays in the public shell, the
 > welcome note is reachable at `…github.io/focknote/content/notes/welcome.md` (200) — a
 > privacy leak. In private mode the public shell must contain **no notes**. (Public mode
 > keeps `content/` — there the shell *is* the notes repo.)
+
+**Memory bridge.** The template ships a root `CLAUDE.md` + a `content/agent/INDEX.md`.
+Together they make the notebook double as Claude's project memory: when Claude Code
+opens the notes repo, the harness loads `CLAUDE.md`, which points it at
+`content/agent/` (model-maintained notes, `INDEX.md` first) as the authoritative
+store. That's why the seed copies `CLAUDE.md` into the **notes** repo (not the
+public shell). Any repo wanting Claude-managed memory just needs these two files —
+no backend/Worker/MCP. (Concept: `INTERFACE.md`.)
 
 ### A2. Write the config
 
@@ -127,6 +135,11 @@ template → Create a new repository**. Name it `focknote`. Pick **Public**. Cre
 **https://github.com/new** named `focknote-notes`, **Add a README** (so it has a `main`
 branch)."
 
+**B1c. (Memory bridge — optional)** "To let Claude use this notebook as its memory:
+in the **notes** repo, add a file named `CLAUDE.md` (paste the template's version from
+**https://github.com/OWNER/focknote/blob/main/CLAUDE.md**) and a folder note
+`content/agent/INDEX.md`. Claude Code then treats `content/agent/` as its store."
+
 **B2. Set the config.** "In your new `focknote` repo, open `admin/config.yml`, click edit,
 and set the `repo:` line to **`<you>/focknote-notes`** (private mode) or **`<you>/focknote`**
 (public mode). Commit." Paste them the exact full `config.yml` if helpful (from
@@ -154,6 +167,8 @@ editor, and *read* an existing FockNote repo to help organize it.
       returns **404** (notes aren't on Pages — they're in the private repo).
 - [ ] Token login round-trips: create a note → it appears as a commit in the notes repo's
       `content/notes/`, survives reload; accents + emoji intact.
+- [ ] **Memory bridge:** the **notes** repo root has `CLAUDE.md` and
+      `content/agent/INDEX.md` (private mode: these are NOT in the public shell).
 
 If a step fails → [`references/troubleshooting.md`](references/troubleshooting.md).
 
