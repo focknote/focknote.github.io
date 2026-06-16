@@ -9,8 +9,9 @@ this doc is only the shell.)
 On a GitHub **project** page the site root is `https://<you>.github.io/<repo>/`, not `/`.
 Absolute paths (`/manifest.json`, `/sw.js`) break. So everything is **relative**:
 
-- `manifest.json`: `"start_url": "./admin/"`, `"scope": "./"`, `"id": "./"`. Resolved
-  against the manifest's own URL (the site root) → `/<repo>/admin/` and `/<repo>/`.
+- `manifest.json`: `"start_url": "./read/"` (the reading view — the app's home; Sveltia
+  is reachable from there via **Edit in CMS**), `"scope": "./"`, `"id": "./"`. Resolved
+  against the manifest's own URL (the site root) → `/<repo>/read/` and `/<repo>/`.
 - Register the SW from the **root** page with a relative path: `register('sw.js')`. Its
   scope becomes `/<repo>/`, which **covers `/admin/`**. (You can't widen a SW's scope from
   inside `/admin/` — that needs the `Service-Worker-Allowed` header, which Pages doesn't

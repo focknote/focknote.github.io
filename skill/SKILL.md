@@ -187,7 +187,8 @@ If a step fails → [`references/troubleshooting.md`](references/troubleshooting
 >
 > 1. Open that link on your phone. Tap **Install app** (or browser menu → *Add to Home
 >    screen*).
-> 2. Open the app → it lands on the editor (`/admin/`).
+> 2. Open the app → it lands on your notes (the `/read/` reading view). Tap a note to
+>    read; ✎ to edit in place; or **Edit in CMS** for the full Sveltia form.
 > 3. Click **Sign in with Token**, follow the link, generate a GitHub token, paste it.
 > 4. Edit the welcome note (or delete it and write your own). **Saving = a git commit.**
 >
