@@ -3,6 +3,7 @@
 - Getting started
   - [What is FockNote](/)
   - [Quick setup](/?id=quick-setup)
+  - [Add to an existing repo](/?id=add-it-to-a-repo-you-already-have)
   - [Privacy modes](/?id=two-privacy-modes)
   - [Naming your repos](/?id=naming-your-repos)
 

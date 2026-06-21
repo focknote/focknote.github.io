@@ -9,7 +9,8 @@ are Markdown files in **your** repo, shared with **Claude** as workspace and mem
 server, no subscription, no lock-in.
 
 - 🧠 Shared brain — Claude reads & curates your notes as git commits
-- 📝 Read & edit anywhere (mobile-friendly PWA, clean `/read/` view)
+- 📝 Read & edit in place anywhere (mobile-friendly PWA, wiki-links, search, callouts)
+- 🗂️ Drop the memory bridge into a repo you already have — no notebook setup needed
 - 🔒 Private by default — your notes, your private repo
 - 💸 $0 forever on GitHub Pages + GitHub
 

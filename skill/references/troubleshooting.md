@@ -28,7 +28,7 @@
   handles SHAs, just refresh).
 
 ## Privacy check fails (private mode)
-- `…github.io/<repo>/content/notes/welcome.md` returns **200** instead of 404 → you put
+- `…github.io/<repo>/knowledge/note/welcome.md` returns **200** instead of 404 → you put
   notes in the *public shell* repo. In private mode the shell repo must contain **no**
   notes; notes live only in the private repo. Move them out and let `backend.repo` point at
   the private repo.

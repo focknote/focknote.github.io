@@ -42,7 +42,7 @@ Confirm every shell path is reachable and the admin loads the same-origin bundle
 
 ```sh
 for p in / /manifest.json /sw.js /admin/ /admin/sveltia-cms.js \
-         /assets/icons/icon-512.png /content/notes/welcome.md; do
+         /assets/icons/icon-512.png /knowledge/note/welcome.md; do
   printf '%s  %s\n' "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8123$p)" "$p"
 done
 curl -s http://127.0.0.1:8123/admin/ | grep -o 'src="[^"]*"'   # expect ./sveltia-cms.js
@@ -63,7 +63,7 @@ To exercise editing locally:
 1. Point `admin/config.yml` `backend.repo` at a real repo you own (a throwaway is fine).
 2. Serve and open `http://127.0.0.1:8123/admin/`.
 3. **Sign in with Token**, paste a short-lived PAT (see `skill/references/token-scopes.md`).
-4. Create/edit/delete a note → confirm a commit lands in that repo's `content/notes/`.
+4. Create/edit/delete a note → confirm a commit lands in that repo's `knowledge/note/`.
 5. Check accents + emoji survive a reload (`caffè 🔥`).
 
 > Sveltia allows `http://localhost` / `127.0.0.1` as an auth origin, so token login works
@@ -176,7 +176,7 @@ Then run the skill's verification checklist by hand:
 - `/admin/` loads same-origin `./sveltia-cms.js`.
 - `config.yml` `backend.repo` = the intended (private) repo.
 - SW scope = `/<repo>/`.
-- **Private mode:** `…github.io/<repo>/content/notes/welcome.md` → **404** (notes aren't on
+- **Private mode:** `…github.io/<repo>/knowledge/note/welcome.md` → **404** (notes aren't on
   Pages).
 - Token login → create note → commit in the notes repo → survives reload; accents/emoji OK.
 

@@ -2,15 +2,22 @@
 
 **FockNote** is a free, installable, git-backed personal notebook — "fork your own Notion."
 Every note is a Markdown file in **your** GitHub repo, which makes it both your notebook
-**and** a shared workspace + memory that you and **Claude** read and write. Capture from any
-surface — Claude Code, Claude chat (GitHub connector), the clean in-app reading view, or the
-in-browser [Sveltia CMS](https://sveltiacms.app/) form. GitHub Pages hosts the app shell; git
-is the whole backend. No server, no subscription, no lock-in.
+**and** a shared workspace + memory that you and **Claude** read and write. The main surface
+is **`/read/`** — a clean, installable read-and-edit-in-place app: wiki-links + backlinks,
+search, callouts, a slash menu, daily notes, all editing in place with no separate form.
+[Sveltia CMS](https://sveltiacms.app/) (`/admin/`) stays available as a fallback for bulk
+edits. Capture from any of these, or from Claude Code / Claude chat (GitHub connector).
+GitHub Pages hosts the app shell; git is the whole backend. No server, no subscription, no
+lock-in.
 
-> 🧠 **Notes as a shared brain.** Drop in the memory bridge (`content/agent/` + `CLAUDE.md`)
-> and Claude treats your notebook as project memory — curating the best of your sessions back
-> as commits you can see, edit, and share. See
+> 🧠 **Notes as a shared brain.** Drop in the memory bridge (`knowledge/reference/` +
+> `CLAUDE.md`) and Claude treats your notebook as project memory — curating the best of your
+> sessions back as commits you can see, edit, and share. See
 > [INTERFACE.md](https://github.com/focknote/focknote/blob/main/INTERFACE.md).
+>
+> The notebook's `knowledge/` tree follows Google's [Open Knowledge
+> Format](https://github.com/focknote/focknote/blob/main/knowledge/reference/MEMORY.md)
+> (OKF) — Markdown + YAML frontmatter, one folder per `type`.
 
 > 🍴 The name is "ForkNote" in a thick accent. The fork is the git kind. The cheek is the point.
 
@@ -34,9 +41,19 @@ Prefer to do it by hand? Manual path:
 2. Set `backend.repo` in `admin/config.yml` to the repo that holds your notes.
 3. **Settings → Pages →** deploy from branch `main`, `/ (root)`.
 4. Open `https://<you>.github.io/<repo>/`, **Install app**, **Sign in with Token**, and write
-   — read in the `/read/` view, edit in the form, or let Claude read and write the repo.
+   in place. The `/admin/` Sveltia form stays available for bulk edits, but the main path is
+   the `/read/` read-and-edit app — or let Claude read and write the repo directly.
 
 Saving a note = a git commit. That's it.
+
+## Add it to a repo you already have
+
+Don't need a whole notebook — just want Claude to keep curated, shareable memory in a repo
+you already work in (a coding project, a docs repo)? Drop in the **memory bridge**
+(`knowledge/reference/` + a thin `CLAUDE.md` import block) and skip the notebook setup
+entirely. No Pages, no second repo, no Sveltia. Ask Claude *"add FockNote memory to this
+repo"* — see [Add the memory bridge to an existing repo](skill/SKILL.md#add-the-memory-bridge-to-an-existing-repo)
+in the skill.
 
 ## Two privacy modes
 

@@ -2,20 +2,23 @@
 name: focknote
 description: >-
   Stand up a FockNote — a free, installable, git-backed Markdown notebook on GitHub Pages
-  that doubles as shared workspace + memory for you and Claude (PWA shell + in-browser
-  Sveltia editor). Use when the user wants to create/deploy/scaffold their own notebook,
-  "fork your own Notion", a private notes app on GitHub, a Claude-readable notes/memory repo,
-  or to update/re-vendor an existing FockNote. Goes from nothing to a deployed notebook +
-  hand-off URL.
+  that doubles as shared workspace + memory for you and Claude (PWA shell with a read-and-
+  edit-in-place app as the main surface; in-browser Sveltia editor as a bulk-edit fallback).
+  Use when the user wants to create/deploy/scaffold their own notebook, "fork your own
+  Notion", a private notes app on GitHub, a Claude-readable notes/memory repo, to add a
+  FockNote-style knowledge base or memory bridge to an existing repo (no full notebook
+  needed), or to update/re-vendor an existing FockNote. Goes from nothing to a deployed
+  notebook + hand-off URL.
 ---
 
 # FockNote setup skill
 
 Goal: **one request → a deployed, installable, editable notebook**, then a hand-off the
 user can act on. Notes are Markdown committed to the user's git repo — read/written by
-Claude (Code or chat), the in-app reading view, or the in-browser Sveltia form. GitHub
-Pages hosts the app shell. Optionally wire the **memory bridge** so the notebook doubles
-as Claude's project memory (see "Add the memory bridge to an existing repo").
+Claude (Code or chat), the `/read/` read-and-edit-in-place app (the main surface), or the
+in-browser Sveltia form (`/admin/`, a bulk-edit fallback). GitHub Pages hosts the app shell.
+Optionally wire just the **memory bridge** into an existing repo, skipping the notebook
+entirely (see "Add the memory bridge to an existing repo").
 
 ## 0. Pick the execution tier (decide first)
 
@@ -74,27 +77,29 @@ Then **move the notes out of the public shell into the private repo** — this i
 private mode actually private:
 ```sh
 cd focknote
-# seed the PRIVATE notes repo with the content folder + the memory bridge...
+# seed the PRIVATE notes repo with the knowledge/ tree + the memory bridge...
 git clone https://github.com/<you>/focknote-notes ../focknote-notes
-cp -r content CLAUDE.md ../focknote-notes/ && (cd ../focknote-notes && git add -A \
+cp -r knowledge CLAUDE.md ../focknote-notes/ && (cd ../focknote-notes && git add -A \
   && git commit -m "Seed notes + memory bridge" && git push -u origin main)
 # ...then DELETE notes + bridge from the PUBLIC shell so they're never served by Pages
-git rm -r content CLAUDE.md && git commit -m "Private mode: notes live in the private repo"
+git rm -r knowledge CLAUDE.md && git commit -m "Private mode: notes live in the private repo"
 ```
 > **Why the delete matters:** Sveltia reads notes from `backend.repo` via the GitHub API,
-> not from the shell's `content/` folder. If `content/` stays in the public shell, the
-> welcome note is reachable at `…github.io/focknote/content/notes/welcome.md` (200) — a
+> not from the shell's `knowledge/` folder. If `knowledge/` stays in the public shell, the
+> welcome note is reachable at `…github.io/focknote/knowledge/note/welcome.md` (200) — a
 > privacy leak. In private mode the public shell must contain **no notes**. (Public mode
-> keeps `content/` — there the shell *is* the notes repo.)
+> keeps `knowledge/` — there the shell *is* the notes repo.)
 
 **Memory bridge.** The template ships three files that make the notebook double as
 Claude's project memory: root `CLAUDE.md` (a thin marker-delimited block that
-**imports** `@content/agent/MEMORY.md`), `content/agent/MEMORY.md` (the read/write
-conventions — single source of truth), and `content/agent/INDEX.md` (the index
-note). When Claude Code opens the notes repo, the harness loads `CLAUDE.md` → the
-import pulls in the conventions → Claude treats `content/agent/` (`INDEX.md` first)
-as the authoritative store. The seed copies all three into the **notes** repo (not
-the public shell). The root file is a thin *import* on purpose: it makes adding the
+**imports** `@knowledge/reference/MEMORY.md`), `knowledge/reference/MEMORY.md` (the
+read/write conventions — single source of truth, and the [Open Knowledge
+Format](https://github.com/focknote/focknote/blob/main/knowledge/reference/MEMORY.md)
+this tree follows), and `knowledge/reference/INDEX.md` (the index note). When
+Claude Code opens the notes repo, the harness loads `CLAUDE.md` → the import pulls
+in the conventions → Claude treats `knowledge/reference/` (`INDEX.md` first) as the
+authoritative store. The seed copies all three into the **notes** repo (not the
+public shell). The root file is a thin *import* on purpose: it makes adding the
 bridge to an **existing** repo a non-destructive append — see "Add the memory bridge
 to an existing repo" below. (Concept: `INTERFACE.md`.)
 
@@ -144,8 +149,8 @@ branch)."
 
 **B1c. (Memory bridge — optional)** "To let Claude use this notebook as its memory,
 add three files to the **notes** repo (copy each from
-**https://github.com/OWNER/focknote**): `CLAUDE.md` (root), `content/agent/MEMORY.md`,
-and `content/agent/INDEX.md`. Claude Code then treats `content/agent/` as its store.
+**https://github.com/OWNER/focknote**): `CLAUDE.md` (root), `knowledge/reference/MEMORY.md`,
+and `knowledge/reference/INDEX.md`. Claude Code then treats `knowledge/reference/` as its store.
 Adding to a repo that *already* has a `CLAUDE.md`? Don't replace it — paste only the
 `<!-- focknote:memory:start … end -->` block to the **end** of your existing file."
 
@@ -172,12 +177,12 @@ editor, and *read* an existing FockNote repo to help organize it.
 - [ ] `admin/config.yml` `backend.repo` = the intended repo (private notes repo in
       private mode).
 - [ ] Service worker registers; its scope is `/focknote/`.
-- [ ] **Private mode privacy:** `https://<you>.github.io/focknote/content/notes/welcome.md`
+- [ ] **Private mode privacy:** `https://<you>.github.io/focknote/knowledge/note/welcome.md`
       returns **404** (notes aren't on Pages — they're in the private repo).
 - [ ] Token login round-trips: create a note → it appears as a commit in the notes repo's
-      `content/notes/`, survives reload; accents + emoji intact.
+      `knowledge/note/`, survives reload; accents + emoji intact.
 - [ ] **Memory bridge:** the **notes** repo root has `CLAUDE.md` and
-      `content/agent/INDEX.md` (private mode: these are NOT in the public shell).
+      `knowledge/reference/INDEX.md` (private mode: these are NOT in the public shell).
 
 If a step fails → [`references/troubleshooting.md`](references/troubleshooting.md).
 
@@ -202,20 +207,20 @@ If a step fails → [`references/troubleshooting.md`](references/troubleshooting
 Use when the user wants Claude-managed memory **in a repo they already have** (a
 coding project, a docs repo) without standing up a whole notebook — e.g. "store the
 best of my Claude sessions here to share with friends." This drops in a
-`content/agent/` folder + wires `CLAUDE.md` **non-destructively**.
+`knowledge/reference/` folder + wires `CLAUDE.md` **non-destructively**.
 
 > **Conflict warning — never overwrite `CLAUDE.md`.** An existing repo usually
 > already has a `CLAUDE.md` of coding instructions. Do **not** clobber it. The
 > bridge is a marker-delimited block (`<!-- focknote:memory:start … end -->`) that
-> only **imports** `@content/agent/MEMORY.md`, so it appends cleanly and is
+> only **imports** `@knowledge/reference/MEMORY.md`, so it appends cleanly and is
 > idempotent. Coding instructions stay intact; memory layers on top.
 
 ```sh
-SRC=path/to/focknote      # a clone of the focknote template (has content/agent/ + CLAUDE.md)
+SRC=path/to/focknote      # a clone of the focknote template (has knowledge/reference/ + CLAUDE.md)
 DEST=path/to/your/repo    # the existing repo to add memory to
 
-mkdir -p "$DEST/content/agent"
-cp "$SRC/content/agent/MEMORY.md" "$SRC/content/agent/INDEX.md" "$DEST/content/agent/"
+mkdir -p "$DEST/knowledge/reference"
+cp "$SRC/knowledge/reference/MEMORY.md" "$SRC/knowledge/reference/INDEX.md" "$DEST/knowledge/reference/"
 
 # Wire CLAUDE.md: append the marker block, never overwrite. Idempotent.
 if [ -f "$DEST/CLAUDE.md" ] && grep -q "focknote:memory:start" "$DEST/CLAUDE.md"; then
@@ -224,13 +229,13 @@ else
   [ -s "$DEST/CLAUDE.md" ] && printf '\n' >> "$DEST/CLAUDE.md"  # separate from existing content
   cat "$SRC/CLAUDE.md" >> "$DEST/CLAUDE.md"                     # the focknote:memory block (creates file if absent)
 fi
-# then: cd "$DEST" && git add content/agent CLAUDE.md && git commit && git push
+# then: cd "$DEST" && git add knowledge/reference CLAUDE.md && git commit && git push
 ```
 
 To **remove** later: delete the lines between the two `focknote:memory` markers and
-the `content/agent/` folder. (Tier B: have the user paste the marker block from
+the `knowledge/reference/` folder. (Tier B: have the user paste the marker block from
 `OWNER/focknote/blob/main/CLAUDE.md` to the end of their existing `CLAUDE.md`, and add
-the two `content/agent/` files by hand.)
+the two `knowledge/reference/` files by hand.)
 
 ## Updating an existing FockNote
 
